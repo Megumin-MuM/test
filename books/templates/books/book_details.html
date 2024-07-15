@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>章节列表</h2>
+<ul>
+    {% for chapter in chapters %}
+    <li>
+        <a href="{% url 'chapter' chapter_id=forloop.counter %}?url={{ chapter.链接 }}">{{ chapter.章节名 }}</a>
+    </li>
+    {% endfor %}
+</ul>
+{% endblock %}

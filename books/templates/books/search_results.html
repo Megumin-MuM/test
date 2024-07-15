@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>搜索</h2>
+<form id="search-form" method="get" action="{% url 'search' %}">
+    <input type="text" name="q" value="{{ keyword }}" placeholder="请输入小说名称">
+    <button type="submit" onclick="showLoader()">搜索</button>
+</form>
+<div id="loader" class="loader">
+    <div class="image">
+        <i class="fa fa-codepen"></i>
+    </div>
+    <span></span>
+</div>
+<ul id="results">
+    {% if books %}
+        {% for book in books %}
+        <li>
+            <a href="{% url 'details' book_id=forloop.counter %}?url={{ book.链接 }}">{{ book.书名 }}</a> - {{ book.作者 }}
+            <p>{{ book.简介 }}</p>
+        </li>
+        {% endfor %}
+    {% else %}
+        <li>
+            <p>查无此书</p>
+        </li>
+    {% endif %}
+</ul>
+
+<script>
+    $(document).ready(function() {
+        $('#search-form').submit(function(event) {
+            event.preventDefault(); // 阻止表单默认提交行为
+            showLoader(); // 显示加载动画
+            var form = $(this);
+            var url = form.attr('action');
+            var formData = form.serialize();
+            
+            // 发送Ajax请求获取搜索结果
+            $.ajax({
+                type: 'GET',
+                url: url,
+                data: formData,
+                success: function(response) {
+                    $('#results').html(response); // 更新搜索结果
+                },
+                error: function(err) {
+                    console.error('Error:', err);
+                },
+                complete: function() {
+                    hideLoader(); // 隐藏加载动画
+                }
+            });
+        });
+    });
+
+    function showLoader() {
+        $('#loader').show();
+    }
+
+    function hideLoader() {
+        $('#loader').hide();
+    }
+</script>
+{% endblock %}

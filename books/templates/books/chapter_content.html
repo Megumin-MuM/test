@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+    pre {
+        line-height: 300%;
+        font-size: 22px;
+        white-space: pre-wrap;
+        word-wrap: break-word;
+        padding: 10px 30px;
+    }
+    h2{
+        text-align:center;
+    }
+    pre span {
+        font-size: 24px; /* 超出换行处使用大号字体 */
+    }
+    .chapter-navigation {
+    display: flex; /* 使用 Flex 布局，使链接在同一行内 */
+    justify-content: space-between; /* 将两个链接分散对齐 */
+    margin-top: 20px; /* 适当的顶部边距 */
+    }
+    .chapter-navigation p{
+        color: #007bff;
+    }
+    .chapter-navigation a{
+        text-decoration:none;
+    }
+    .chapter-link {
+        padding: 10px 15px; /* 按钮内边距 */
+        text-decoration: none;
+        color: #007bff;
+        border: 1px solid #007bff;
+        border-radius: 5px; /* 圆角边框 */
+        transition: all 0.3s ease; /* 渐变过渡效果 */
+
+    }
+
+    .chapter-link:hover {
+        background-color: #007bff;
+        color: white;
+        text-decoration: none;
+    }
+
+    .chapter-link.disabled {
+        color: #6c757d; /* 禁用状态文字颜色 */
+        cursor: not-allowed; /* 禁用状态鼠标样式 */
+        border-color: #6c757d; /* 禁用状态边框颜色 */
+    }
+</style>
+
+<h2>{{ title }}</h2>
+<pre>    {{ content }}
+<div class="chapter-navigation">{% if chapter_id == 1 %}
+    <p>已经是第一章了</p>
+    {% else %}
+    {% with previous_chapter_id=chapter_id|add:-1 %}
+        <a href="{% url 'chapter' chapter_id=previous_chapter_id %}?url={{ link }}">上一章</a>
+    {% endwith %}
+    {% endif %}
+    {% with next_chapter_id=chapter_id|add:1 %}
+        <a href="{% url 'chapter' chapter_id=next_chapter_id %}?url={{ link }}">下一章</a>
+    {% endwith %}
+</div>
+</pre>
+{% endblock %}

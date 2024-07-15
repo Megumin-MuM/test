@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>小说爬取</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css?family=Lato:100,300,400,700,900');
+        @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css');
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Lato', sans-serif;
+            background-color: #f4f4f9;
+            color: #333;
+        }
+
+        header {
+            background-color: #4CAF50;
+            color: white;
+            padding: 15px 0;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        header h1 {
+            margin: 0;
+            font-weight: 300;
+        }
+
+        main {
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 20px;
+            background: white;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+
+        footer {
+            text-align: center;
+            padding: 10px 0;
+            margin-top: 15px;
+            background: #333;
+            color: white;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+
+        form {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        input[type="text"] {
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ddd;
+            border-radius: 4px 0 0 4px;
+            width: 70%;
+        }
+
+        button {
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #4CAF50;
+            background-color: #4CAF50;
+            color: white;
+            cursor: pointer;
+            border-radius: 0 4px 4px 0;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        ul li {
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        ul li a {
+            color: #4CAF50;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        ul li p {
+            margin: 5px 0 0 0;
+            color: #777;
+        }
+
+        @import url(https://fonts.googleapis.com/css?family=Lato:100,300,400,700,900);
+        @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css');
+        .loader {
+            display: none; /* 默认隐藏 */
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+        .loader .image {
+            font-size: 40px;
+            margin-bottom: 10px;
+        }
+        .loader span {
+            font-size: 20px;
+        }
+
+        html, body {
+        margin: 0;
+        padding: 0;
+        font-family: 'Lato', sans-serif;
+        }
+        .loader {      
+        width: 100px;
+        height: 80px;
+        position: absolute;
+        top: 0; right: 0; left: 0; bottom: 0;
+        margin: auto;
+        }
+        .loader .image {    
+        width: 100px;
+        height: 160px;
+        font-size: 40px;
+        text-align: center;
+        transform-origin: bottom center;
+        animation: 3s rotate infinite;
+        opacity: 0;
+        }
+        .loader span {
+        display: block;
+        width: 100%;
+        text-align: center;
+        position: absolute;
+        bottom: 0;
+        }
+
+        @keyframes rotate{
+        0% {
+            transform: rotate(90deg);
+        }
+        10% {
+            opacity: 0;
+        }
+        35% {
+            transform: rotate(0deg);
+            opacity: 1;
+        }
+        65% {
+            transform: rotate(0deg);
+            opacity: 1;
+        }
+        80% {
+            opacity: 0;
+        }
+        100% {
+            transform: rotate(-90deg);
+        }
+        }
+
+    </style>
+</head>
+<body>
+    <header>
+        <h1>小说爬取与展示</h1>
+    </header>
+    <main>
+        {% block content %}
+        {% endblock %}
+    </main>
+    <footer>
+        <p>&copy; 2024 小说爬取与展示</p>
+    </footer>
+
+    <div id="loader" class="loader">
+        <div class="image">
+            <i class="fa fa-spinner"></i>
+        </div>
+        <span>Loading...</span>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        function changeImage(counter) {
+            var images = [
+                '<i class="fa fa-fighter-jet"></i>',
+                '<i class="fa fa-gamepad"></i>',
+                '<i class="fa fa-headphones"></i>',
+                '<i class="fa fa-cubes"></i>',
+                '<i class="fa fa-paw"></i>',
+                '<i class="fa fa-rocket"></i>',
+                '<i class="fa fa-ticket"></i>',
+                '<i class="fa fa-pie-chart"></i>',
+                '<i class="fa fa-codepen"></i>'
+            ];
+
+            $(".loader .image").html(images[counter]);
+        }
+
+        function loading() {
+            var num = 0;
+
+            for (let i = 0; i <= 100; i++) {
+                setTimeout(function() { 
+                    $('.loader span').html(num + '%');
+
+                    if (num == 100) {
+                        loading();
+                    }
+                    num++;
+                }, i * 150);
+            }
+        }
+
+        function showLoader() {
+            $('#loader').show();
+            var counter = 0;
+
+            // Start the changing images
+            setInterval(function() {
+                if (counter == 9) { 
+                    counter = 0; 
+                }
+
+                changeImage(counter);
+                counter++;
+            }, 3000);
+
+            loading();
+        }
+
+        function hideLoader() {
+            $('#loader').hide();
+        }
+
+        $(document).ready(function() {
+            $('#search-form').submit(function() {
+                showLoader();
+            });
+
+            $('#results').on('DOMSubtreeModified', function() {
+                hideLoader();
+            });
+        });
+    </script>
+</body>
+</html>
